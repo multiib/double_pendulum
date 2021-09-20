@@ -1,6 +1,9 @@
 import scipy
 
 class ExponentialDecay:
+    """
+    ODE class for exponential decay.
+    """
     def __init__(self, a):
         self.a = a
         if a < 0:
