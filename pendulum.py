@@ -23,7 +23,7 @@ class Pendulum:
         self.dt = dt
 
         if angle == "deg":
-            angle = np.radians(angle)
+            U0[0] = np.radians(U0[0])
 
         elif angle == "rad":
             pass
