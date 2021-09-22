@@ -48,6 +48,21 @@ class Pendulum:
     def omega(self):
         return self._omega
 
+    @property
+    def x(self):
+        return self.L*sin(self.theta)
+
+    @property
+    def x(self):
+        return -self.L*cos(self.theta)
+
+
+
+
+
+
+
+
 
 # if __name__ == "__main__":
 #     """Run example"""
