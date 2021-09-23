@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import solve_ivp
+from matplotlib import animation
 
 class DoublePendulum():
     def __init__(self, L1=1, L2=1, M1=1, M2=1, g=9.81):
@@ -124,20 +125,51 @@ class DoublePendulum():
         return self.P + self.K
 
 
+    def create_animation(self):
+    # Create empty figure
+        fig = plt.figure()
+
+        # Configure figure
+        plt.axis('equal')
+        plt.axis('off')
+        plt.axis((-3, 3, -3, 3))
+
+        # Make an "empty" plot object to be updated throughout the animation
+        self.pendulums, = plt.plot([], [], 'o-', lw=2)
+
+        # Call FuncAnimation
+        self.animation = animation.FuncAnimation(fig,
+                                                 self._next_frame,
+
+                                                 frames=range(len(self.x1)),
+
+                                                 repeat=None,
+                                                 interval=1000*self.dt,
+                                                 blit=True)
 
 
 
-
+    def _next_frame(self, i):
+        self.pendulums.set_data((0, self.x1[i], self.x2[i]),
+                                (0, self.y1[i], self.y2[i]))
+        return self.pendulums,
 
 
 if __name__ == "__main__":
     """Run example"""
-    dp = DoublePendulum()
-    U0 = (np.pi/2, 0, np.pi/2, 0)
-    dp.solve(U0, T=100, dt=0.0001)
-    plt.plot(dp.t, dp.P, label = "P")
-    plt.plot(dp.t, dp.K, label = "K")
-    plt.plot(dp.t, dp.E, label = "E")
-    # plt.plot(dp.x2, dp.y2)
-    plt.legend()
+
+    model = DoublePendulum()
+    U0 = (np.pi - 0.01, 0, np.pi-0.01, 0)
+    model.solve(U0, T=10, dt=0.01)
+    model.create_animation()
     plt.show()
+
+    # dp = DoublePendulum()
+    # U0 = (np.pi/2, 0, np.pi/2, 0)
+    # dp.solve(U0, T=100, dt=0.0001)
+    # plt.plot(dp.t, dp.P, label = "P")
+    # plt.plot(dp.t, dp.K, label = "K")
+    # plt.plot(dp.t, dp.E, label = "E")
+    # # plt.plot(dp.x2, dp.y2)
+    # plt.legend()
+    # plt.show()
