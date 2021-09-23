@@ -11,6 +11,7 @@ import pytest
     ]
 )
 def test_domega1_dt(theta1, theta2, expected):
+    """Test"""
     dp = DoublePendulum()
     t = 0
     y = (theta1, 0.25, theta2, 0.15)
@@ -34,3 +35,20 @@ def test_domega2_dt(theta1, theta2, expected):
     _, _, dtheta2_dt, domega2_dt = dp(t, y)
     assert np.isclose(dtheta2_dt, 0.15)
     assert np.isclose(domega2_dt, expected)
+
+@pytest.mark.parametrize(
+    "prop", [
+            "t", "theta1", "omega1", "theta2", "omega2",
+            "x1", "y1", "x2", "y2", "P", "K", "E"
+            ]
+)
+def test_property(prop):
+    """
+    Testing @property is working as expected
+    by trying to set attribute.
+    """
+    dp = DoublePendulum()
+    dp.solve((1, 0, 1, 0), T=10, dt=0.01)
+
+    with pytest.raises(AttributeError):
+        setattr(dp,f"{prop}", 1)
