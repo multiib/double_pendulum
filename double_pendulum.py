@@ -167,5 +167,5 @@ if __name__ == "__main__":
 	U0 = (np.pi, 0, np.pi-one_degree, 0)
 	model.solve(U0, T=10, dt=0.01)
 	model.create_animation()
-#    model.show_animation()
-	model.save_animation("dp_benjabor.mp4")
+	model.show_animation()
+	#model.save_animation("dp_benjabor.mp4")
