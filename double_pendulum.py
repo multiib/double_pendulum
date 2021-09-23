@@ -3,11 +3,12 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 class DoublePendulum():
-    def __init__(self, L1=1, L2=1, g=9.81):
+    def __init__(self, L1=1, L2=1, M1=1, M2=1, g=9.81):
         self.L1 = L1
         self.L2 = L2
+        self.M1 = M1
+        self.M2 = M2
         self.g = g
-
 
     def __call__(self, t, y):
         theta1, omega1, theta2, omega2 = y
@@ -49,7 +50,7 @@ class DoublePendulum():
 
         t_ev = np.linspace(0, T, int(T/self.dt) + 1)
 
-        sol = solve_ivp(self.__call__, [0, T], U0, t_eval=t_ev)
+        sol = solve_ivp(self.__call__, [0, T], U0, t_eval=t_ev, method="Radau")
 
         self._t = t_ev
         self._theta1 = sol.y[0]
@@ -95,11 +96,48 @@ class DoublePendulum():
     def y2(self):
         return self.y1 - self.L2*np.cos(self.theta2)
 
+    # energy
+    @property
+    def P(self):
+        """Kinetic Energy"""
+
+        P_1 = self.M1*self.g*(self.y1+self.L1)
+        P_2 = self.M2*self.g*(self.y2+  self.L1 + self.L2)
+        return P_1 + P_2
+
+    @property
+    def K(self):
+        """Kinetic Energy"""
+
+        vx1 = np.gradient(self.x1, self.dt)
+        vy1 = np.gradient(self.y1, self.dt)
+        vx2 = np.gradient(self.x2, self.dt)
+        vy2 = np.gradient(self.y2, self.dt)
+
+        K1 = (1/2)*self.M1*(vx1**2 + vy1**2)
+        K2 = (1/2)*self.M2*(vx2**2 + vy2**2)
+        return K1 + K2
+
+    @property
+    def E(self):
+        """Total energy"""
+        return self.P + self.K
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     """Run example"""
     dp = DoublePendulum()
     U0 = (np.pi/2, 0, np.pi/2, 0)
-    dp.solve(U0, T=100, dt=0.001)
-    plt.plot(dp.x2, dp.y2)
+    dp.solve(U0, T=100, dt=0.0001)
+    plt.plot(dp.t, dp.P, label = "P")
+    plt.plot(dp.t, dp.K, label = "K")
+    plt.plot(dp.t, dp.E, label = "E")
+    # plt.plot(dp.x2, dp.y2)
+    plt.legend()
     plt.show()
