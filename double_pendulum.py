@@ -35,7 +35,7 @@ class DoublePendulum():
 		return dtheta1_dt, domega1_dt, dtheta2_dt, domega2_dt
 
 
-		def solve(self, U0, T, dt, angle="rad"):
+	def solve(self, U0, T, dt, angle="rad"):
 		"""Method for solving the ODE with initial conditions"""
 
 		self.dt = dt
