@@ -3,7 +3,10 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from matplotlib import animation
 
+
 class DoublePendulum():
+
+
 	def __init__(self, L1=1, L2=1, M1=1, M2=1, g=9.81):
 		self.L1 = L1
 		self.L2 = L2
@@ -12,6 +15,7 @@ class DoublePendulum():
 		self.g = g
 
 	def __call__(self, t, y):
+		"""Setting up ODE"""
 		theta1, omega1, theta2, omega2 = y
 
 		dtheta1_dt = omega1
@@ -140,14 +144,10 @@ class DoublePendulum():
 		# Call FuncAnimation
 		self.animation = animation.FuncAnimation(fig,
 												 self._next_frame,
-
 												 frames=range(len(self.x1)),
-
 												 repeat=None,
 												 interval=1000*self.dt,
 												 blit=True)
-
-
 
 	def _next_frame(self, i):
 		self.pendulums.set_data((0, self.x1[i], self.x2[i]),
@@ -168,4 +168,4 @@ if __name__ == "__main__":
 	model.solve(U0, T=10, dt=0.01)
 	model.create_animation()
 	model.show_animation()
-	#model.save_animation("dp_benjabor.mp4")
+	model.save_animation("dp_benjabor.mp4")
